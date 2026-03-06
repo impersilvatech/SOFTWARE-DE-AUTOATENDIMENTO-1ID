@@ -1,8 +1,3 @@
-/* =========================================
-   LÓGICA PRINCIPAL DO APLICATIVO (app.js)
-   ========================================= */
-
-// Variável global para guardar o carrinho (tenta procurar no localStorage, se não existir, cria uma lista vazia)
 let carrinho = JSON.parse(localStorage.getItem('carrinhoCatalogo')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
