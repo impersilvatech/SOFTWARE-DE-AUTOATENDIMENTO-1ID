@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu | Catálogo de Pedidos</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    /* Um pequeno estilo extra apenas para o Menu */
+    <style>
+        .produto-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .produto-imagem {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--borda-raio);
+            background-color: #e9ecef; /* Cor de fundo caso a imagem falhe */
+        }
+        .produto-info {
+            flex-grow: 1;
+        }
+        .produto-preco {
+            font-weight: bold;
+            color: var(--cor-vermelho); /* Destaque para o preço */
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header-amarelo">
+            <h1>Olá, <span id="nome-cliente-display">Cliente</span>! 🍕</h1>
+            <p>O que vai desejar para hoje?</p>
+        </header>
+
+        <main id="lista-produtos">
+            </main>
+    </div>
+
+    <div class="nav-inferior">
+        <button id="btn-ver-carrinho" class="btn-primario" style="width: 90%;">
+            🛒 Ver Carrinho (<span id="contador-carrinho">0</span>)
+        </button>
+    </div>
+
+    <script src="js/produtos.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
