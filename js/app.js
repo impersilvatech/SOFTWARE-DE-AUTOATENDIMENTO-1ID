@@ -44,8 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Define o aspecto e comportamento do botão
             const textoBotao = jaNoCarrinho ? "✅ Adicionado" : "Adicionar ➕";
             const classeBotao = jaNoCarrinho ? "btn-sucesso" : "btn-primario";
-            // O botão NÃO fica mais desabilitado, mas muda a função de clique
-            const onclick = jaNoCarrinho ? `onclick="alertaJáAdicionado('${produto.nome}')"` : `onclick="adicionarAoCarrinho(${produto.id}, this)"`;
+            
+            // SE já estiver no carrinho, desativa o botão (disabled) e tira a ação de clique.
+            const estadoBotao = jaNoCarrinho ? "disabled" : "";
+            const acaoClique = jaNoCarrinho ? "" : `onclick="adicionarAoCarrinho(${produto.id}, this)"`;
 
             // Cria o cartão do produto
             const card = document.createElement('div');
@@ -56,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3 style="font-size: 1.1em; margin-bottom: 5px;">${produto.nome}</h3>
                     <p style="font-size: 0.85em; color: #666; margin-bottom: 8px;">${produto.descricao}</p>
                     <div class="produto-preco">${produto.preco} Kz</div>
-                    <button class="${classeBotao}" ${onclick}>
+                    <button class="${classeBotao}" ${estadoBotao} ${acaoClique}>
                         ${textoBotao}
                     </button>
                 </div>
@@ -152,25 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
 // FUNÇÕES GLOBAIS
 // =========================================
 
-// NOVA FUNÇÃO: Alerta para itens já no carrinho
-window.alertaJáAdicionado = function(nome) {
-    alert(`O item "${nome}" já foi adicionado ao carrinho!`);
-};
-
 window.adicionarAoCarrinho = function(idProduto, elementoBotao) {
     const produto = produtos.find(p => p.id === idProduto);
     if (produto) {
-        // Adiciona ao carrinho
         carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, quantidade: 1 });
         localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho));
         
-        // Altera o visual do botão
-        elementoBotao.textContent = "✅ Adicionado";
+        // Altera o visual do botão e desativa-o para não haver mais cliques acidentais
+        elementoBotao.textContent = "✅ Adicionado no carrinho";
         elementoBotao.classList.remove('btn-primario');
         elementoBotao.classList.add('btn-sucesso');
-        
-        // Muda o comportamento do botão para dar alerta no próximo clique
-        elementoBotao.setAttribute('onclick', `alertaJáAdicionado('${produto.nome}')`);
+        elementoBotao.disabled = true;
+        elementoBotao.onclick = null; // Remove o evento de clique
         
         atualizarContador();
     }
