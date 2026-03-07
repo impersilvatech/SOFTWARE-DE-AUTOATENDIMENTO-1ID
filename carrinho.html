@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     
     <style>
-        /* Estilos específicos para a lista do carrinho */
         .carrinho-item {
             display: flex;
             justify-content: space-between;
@@ -47,20 +46,6 @@
             font-size: 12px;
             margin-top: 8px;
         }
-        .total-container {
-            font-size: 1.2em;
-            font-weight: bold;
-            text-align: right;
-            margin: 20px 0;
-            padding: 15px;
-            background-color: #e9ecef;
-            border-radius: var(--borda-raio);
-            color: var(--cor-cinza-escuro);
-        }
-        .botoes-acao {
-            display: flex;
-            gap: 10px;
-        }
     </style>
 </head>
 <body>
@@ -77,14 +62,14 @@
             <div class="total-container">
                 Total do Pedido: <span id="valor-total">0</span> Kz
             </div>
-
-            <div class="botoes-acao">
-                <button class="btn-primario" onclick="window.location.href='menu.html'">⬅️ Voltar</button>
-                <button class="btn-sucesso" id="btn-confirmar">Confirmar Pedido ✅</button>
-            </div>
         </main>
+    </div>
+
+    <div class="nav-inferior">
+        <button class="btn-primario" onclick="window.location.href='menu.html'">⬅️ Voltar</button>
+        <button class="btn-sucesso" id="btn-confirmar">Confirmar Pedido ✅</button>
     </div>
 
     <script src="js/app.js"></script>
 </body>
-</html>
+    </html>
