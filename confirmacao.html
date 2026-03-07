@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação | Catálogo de Pedidos</title>
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .resumo-seccao {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ccc;
+        }
+        .resumo-seccao h3 {
+            color: var(--cor-cinza-escuro);
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .linha-resumo {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.95em;
+        }
+        .total-destaque {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--cor-vermelho);
+            text-align: right;
+            margin-top: 10px;
+        }
+        .botoes-acao {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header-azul">
+            <h1>Resumo do Pedido 🧾</h1>
+            <p>Verifique os dados e envie para o nosso WhatsApp.</p>
+        </header>
+
+        <main class="card">
+            <div class="resumo-seccao">
+                <h3>📍 Dados de Entrega</h3>
+                <p><strong>Nome:</strong> <span id="resumo-nome"></span></p>
+                <p><strong>Local:</strong> <span id="resumo-local"></span></p>
+                <p><strong>Endereço:</strong> <span id="resumo-endereco"></span></p>
+            </div>
+
+            <div class="resumo-seccao">
+                <h3>🛍️ Seus Itens</h3>
+                <div id="resumo-itens">
+                    </div>
+                <div class="total-destaque">
+                    Total: <span id="resumo-total">0</span> Kz
+                </div>
+            </div>
+
+            <div class="botoes-acao">
+                <button class="btn-primario" onclick="window.location.href='carrinho.html'">⬅️ Voltar</button>
+                <button class="btn-sucesso" id="btn-whatsapp">Enviar WhatsApp 📲</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
