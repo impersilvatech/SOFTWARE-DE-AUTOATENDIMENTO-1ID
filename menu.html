@@ -17,14 +17,14 @@
             height: 80px;
             object-fit: cover;
             border-radius: var(--borda-raio);
-            background-color: #e9ecef; /* Cor de fundo caso a imagem falhe */
+            background-color: #e9ecef;
         }
         .produto-info {
             flex-grow: 1;
         }
         .produto-preco {
             font-weight: bold;
-            color: var(--cor-vermelho); /* Destaque para o preço */
+            color: var(--cor-vermelho);
             margin-bottom: 10px;
         }
     </style>
@@ -41,8 +41,9 @@
     </div>
 
     <div class="nav-inferior">
-        <button id="btn-ver-carrinho" class="btn-primario" style="width: 90%;">
-            🛒 Ver Carrinho (<span id="contador-carrinho">0</span>)
+        <button class="btn-primario" onclick="window.location.href='index.html'">Voltar ao Início</button>
+        <button id="btn-ver-carrinho" class="btn-primario">
+            🛒 Carrinho (<span id="contador-carrinho">0</span>)
         </button>
     </div>
 
