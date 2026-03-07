@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('resumo-total').textContent = totalPedido;
 
         document.getElementById('btn-whatsapp').addEventListener('click', () => {
-            const numeroLoja = "244999999999"; 
+            const numeroLoja = "244954288128"; 
 
             let mensagem = `✅ Pedido Confirmado!\n`;
             mensagem += `Nome do cliente: ${cliente.nome}\n`;
