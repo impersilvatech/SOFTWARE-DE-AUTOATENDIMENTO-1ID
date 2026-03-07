@@ -4,7 +4,6 @@
 
 let carrinho = JSON.parse(localStorage.getItem('carrinhoCatalogo')) || [];
 
-// Ouve quando a página carrega
 document.addEventListener('DOMContentLoaded', () => {
     
     // =========================================
@@ -13,15 +12,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const formCliente = document.getElementById('form-cliente');
     if (formCliente) {
         formCliente.addEventListener('submit', function(evento) {
-            evento.preventDefault(); // ISSO IMPEDE A PÁGINA DE RECARREGAR!
-            
+            evento.preventDefault();
             const dadosCliente = {
                 nome: document.getElementById('nome').value,
                 provincia: document.getElementById('provincia').value,
                 municipio: document.getElementById('municipio').value,
                 bairro: document.getElementById('bairro').value
             };
-            
             localStorage.setItem('clienteCatalogo', JSON.stringify(dadosCliente));
             window.location.href = 'menu.html';
         });
@@ -41,11 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         produtos.forEach(produto => {
+            // Verifica se este produto já está no carrinho
             const jaNoCarrinho = carrinho.find(item => item.id === produto.id);
+            
+            // Define o aspecto e comportamento do botão
             const textoBotao = jaNoCarrinho ? "✅ Adicionado" : "Adicionar ➕";
             const classeBotao = jaNoCarrinho ? "btn-sucesso" : "btn-primario";
-            const estadoBotao = jaNoCarrinho ? "disabled" : "";
+            // O botão NÃO fica mais desabilitado, mas muda a função de clique
+            const onclick = jaNoCarrinho ? `onclick="alertaJáAdicionado('${produto.nome}')"` : `onclick="adicionarAoCarrinho(${produto.id}, this)"`;
 
+            // Cria o cartão do produto
             const card = document.createElement('div');
             card.className = 'card produto-card';
             card.innerHTML = `
@@ -54,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h3 style="font-size: 1.1em; margin-bottom: 5px;">${produto.nome}</h3>
                     <p style="font-size: 0.85em; color: #666; margin-bottom: 8px;">${produto.descricao}</p>
                     <div class="produto-preco">${produto.preco} Kz</div>
-                    <button class="${classeBotao}" ${estadoBotao} onclick="adicionarAoCarrinho(${produto.id}, this)">
+                    <button class="${classeBotao}" ${onclick}>
                         ${textoBotao}
                     </button>
                 </div>
@@ -121,13 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('resumo-total').textContent = totalPedido;
 
         document.getElementById('btn-whatsapp').addEventListener('click', () => {
-            // NÚMERO DA LOJA AQUI
+            // NÚMERO DO VENDEDOR (coloque aqui o número da sua loja)
             const numeroLoja = "244954288128"; 
 
             let mensagem = `✅ Pedido Confirmado!\n`;
             mensagem += `Nome do cliente: ${cliente.nome}\n`;
-            mensagem += `Província/Município: ${cliente.provincia} / ${cliente.municipio}\n`;
-            mensagem += `Rua/Bairro: ${cliente.bairro}\n\n`;
+            mensagem += `província/município: ${cliente.provincia} / ${cliente.municipio}\n`;
+            mensagem += `rua/bairro: ${cliente.bairro}\n\n`;
 
             carrinho.forEach(item => {
                 mensagem += `${item.quantidade}x ${item.nome} - ${item.preco} Kz\n`;
@@ -144,21 +146,32 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         });
     }
-}); // FIM DA LEITURA DAS PÁGINAS (MUITO IMPORTANTE ESTA LINHA!)
+});
 
 // =========================================
-// FUNÇÕES GLOBAIS (Não podem estar dentro do DOMContentLoaded)
+// FUNÇÕES GLOBAIS
 // =========================================
+
+// NOVA FUNÇÃO: Alerta para itens já no carrinho
+window.alertaJáAdicionado = function(nome) {
+    alert(`O item "${nome}" já foi adicionado ao carrinho!`);
+};
 
 window.adicionarAoCarrinho = function(idProduto, elementoBotao) {
     const produto = produtos.find(p => p.id === idProduto);
     if (produto) {
+        // Adiciona ao carrinho
         carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, quantidade: 1 });
         localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho));
+        
+        // Altera o visual do botão
         elementoBotao.textContent = "✅ Adicionado";
         elementoBotao.classList.remove('btn-primario');
         elementoBotao.classList.add('btn-sucesso');
-        elementoBotao.disabled = true;
+        
+        // Muda o comportamento do botão para dar alerta no próximo clique
+        elementoBotao.setAttribute('onclick', `alertaJáAdicionado('${produto.nome}')`);
+        
         atualizarContador();
     }
 };
