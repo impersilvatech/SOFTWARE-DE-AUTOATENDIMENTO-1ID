@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('btn-whatsapp').addEventListener('click', () => {
             // NÚMERO DA LOJA AQUI
-            const numeroLoja = "244999999999"; 
+            const numeroLoja = "244954288128"; 
 
             let mensagem = `✅ Pedido Confirmado!\n`;
             mensagem += `Nome do cliente: ${cliente.nome}\n`;
