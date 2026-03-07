@@ -24,7 +24,7 @@ body {
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
     line-height: 1.6;
-    padding-bottom: 80px; /* Espaço para a barra de navegação que ficará no rodapé depois */
+    padding-bottom: 90px; /* Aumentei para dar espaço para o novo rodapé fixo */
 }
 
 .container {
@@ -146,4 +146,18 @@ button {
 
 .nav-inferior button {
     width: 45%; /* Para caberem dois botões lado a lado */
+}
+
+/* =========================================
+   ADICIONAIS DO CARRINHO
+   ========================================= */
+.total-container {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center; /* CENTRALIZADO CONFORME PEDIDO */
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: var(--borda-raio);
+    color: var(--cor-cinza-escuro);
 }
