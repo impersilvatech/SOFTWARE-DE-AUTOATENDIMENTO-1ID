@@ -83,7 +83,80 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// =========================================
+    // 4. TELA DE CONFIRMAÇÃO (confirmacao.html)
+    // =========================================
+    const resumoItens = document.getElementById('resumo-itens');
+    if (resumoItens) {
+        const clienteGuardado = localStorage.getItem('clienteCatalogo');
+        
+        // Se não houver cliente ou carrinho vazio, manda para o início
+        if (!clienteGuardado || carrinho.length === 0) {
+            window.location.href = 'index.html';
+            return;
+        }
 
+        const cliente = JSON.parse(clienteGuardado);
+        
+        // Preenche os dados do cliente na tela
+        document.getElementById('resumo-nome').textContent = cliente.nome;
+        document.getElementById('resumo-local').textContent = `${cliente.provincia} / ${cliente.municipio}`;
+        document.getElementById('resumo-endereco').textContent = cliente.bairro;
+
+        // Preenche os itens na tela
+        let totalPedido = 0;
+        resumoItens.innerHTML = ''; // Limpa a área
+        
+        carrinho.forEach(item => {
+            const subtotal = item.preco * item.quantidade;
+            totalPedido += subtotal;
+            
+            const linha = document.createElement('div');
+            linha.className = 'linha-resumo';
+            linha.innerHTML = `
+                <span>${item.quantidade}x ${item.nome}</span>
+                <strong>${subtotal} Kz</strong>
+            `;
+            resumoItens.appendChild(linha);
+        });
+
+        // Atualiza o total
+        document.getElementById('resumo-total').textContent = totalPedido;
+
+        // Configura o botão do WhatsApp
+        document.getElementById('btn-whatsapp').addEventListener('click', () => {
+            // NÚMERO DO VENDEDOR (coloque aqui o número da sua loja com o código do país, ex: 244999999999)
+            const numeroLoja = "244999999999"; 
+
+            // Monta a mensagem exatamente como você pediu
+            let mensagem = `✅ Pedido Confirmado!\n`;
+            mensagem += `Nome do cliente: ${cliente.nome}\n`;
+            mensagem += `província/município: ${cliente.provincia} / ${cliente.municipio}\n`;
+            mensagem += `rua/bairro: ${cliente.bairro}\n\n`;
+
+            carrinho.forEach(item => {
+                mensagem += `${item.quantidade}x ${item.nome} - ${item.preco} Kz\n`;
+            });
+
+            mensagem += `\nTotal: ${totalPedido} Kz\n`;
+            mensagem += `Obrigado pela preferência!`;
+
+            // Codifica o texto para formato de URL da internet (transforma espaços em %20, etc.)
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            
+            // Cria o link do WhatsApp
+            const urlWhatsapp = `https://wa.me/${numeroLoja}?text=${mensagemCodificada}`;
+
+            // Limpa o carrinho após enviar o pedido (opcional, mas recomendado)
+            localStorage.removeItem('carrinhoCatalogo');
+
+            // Abre o WhatsApp numa nova aba
+            window.open(urlWhatsapp, '_blank');
+            
+            // Opcional: redirecionar de volta à tela inicial depois de pedir
+            window.location.href = 'index.html';
+        });
+    }
 // =========================================
 // FUNÇÕES GLOBAIS
 // =========================================
