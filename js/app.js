@@ -1,9 +1,13 @@
+/* =========================================
+   LÓGICA PRINCIPAL DO APLICATIVO (app.js)
+   ========================================= */
+
 let carrinho = JSON.parse(localStorage.getItem('carrinhoCatalogo')) || [];
 
 document.addEventListener('DOMContentLoaded', () => {
     
     // =========================================
-    // LÓGICA DA TELA INICIAL (index.html)
+    // 1. TELA INICIAL (index.html)
     // =========================================
     const formCliente = document.getElementById('form-cliente');
     if (formCliente) {
@@ -21,35 +25,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =========================================
-    // LÓGICA DA TELA DE MENU (menu.html)
+    // 2. TELA DE MENU (menu.html)
     // =========================================
     const listaProdutos = document.getElementById('lista-produtos');
     if (listaProdutos) {
-        // 1. Exibir o nome do cliente no cabeçalho
         const clienteGuardado = localStorage.getItem('clienteCatalogo');
         if (clienteGuardado) {
             const cliente = JSON.parse(clienteGuardado);
             document.getElementById('nome-cliente-display').textContent = cliente.nome;
         } else {
-            // Se não houver cliente salvo (alguém tentou aceder ao menu diretamente), volta ao início
             window.location.href = 'index.html';
         }
 
-        // 2. Desenhar os produtos na tela
         produtos.forEach(produto => {
-            // Verifica se este produto já está no carrinho
             const jaNoCarrinho = carrinho.find(item => item.id === produto.id);
-            
-            // Define o aspecto do botão com base na verificação acima (Regra de adicionar apenas 1 vez)
             const textoBotao = jaNoCarrinho ? "✅ Adicionado" : "Adicionar ➕";
             const classeBotao = jaNoCarrinho ? "btn-sucesso" : "btn-primario";
             const estadoBotao = jaNoCarrinho ? "disabled" : "";
 
-            // Cria o "cartão" do HTML para o produto
             const card = document.createElement('div');
             card.className = 'card produto-card';
-            
-            // Aqui usamos crases (`) para criar blocos de HTML dinâmicos
             card.innerHTML = `
                 <img src="${produto.imagem}" alt="${produto.nome}" class="produto-imagem" onerror="this.src='https://via.placeholder.com/80?text=Sem+Foto'">
                 <div class="produto-info">
@@ -61,16 +56,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
                 </div>
             `;
-            // Adiciona o cartão pronto à nossa caixa principal
             listaProdutos.appendChild(card);
         });
 
-        // 3. Atualizar o contador do carrinho na barra inferior
         atualizarContador();
-
-        // 4. Configurar o botão de "Ver Carrinho"
         document.getElementById('btn-ver-carrinho').addEventListener('click', () => {
             window.location.href = 'carrinho.html';
+        });
+    }
+
+    // =========================================
+    // 3. TELA DE CARRINHO (carrinho.html)
+    // =========================================
+    const containerCarrinho = document.getElementById('itens-carrinho');
+    if (containerCarrinho) {
+        // Quando a página abre, desenha o carrinho imediatamente
+        renderizarCarrinho();
+
+        // Configura o botão de confirmar pedido
+        document.getElementById('btn-confirmar').addEventListener('click', () => {
+            if (carrinho.length === 0) {
+                alert('O seu carrinho está vazio! Adicione produtos antes de confirmar.');
+                return;
+            }
+            window.location.href = 'confirmacao.html';
         });
     }
 });
@@ -79,38 +88,87 @@ document.addEventListener('DOMContentLoaded', () => {
 // FUNÇÕES GLOBAIS
 // =========================================
 
-// Função chamada quando o cliente clica no botão "Adicionar"
 window.adicionarAoCarrinho = function(idProduto, elementoBotao) {
-    // Procura o produto completo na nossa base de dados (produtos.js)
     const produto = produtos.find(p => p.id === idProduto);
-    
     if (produto) {
-        // Adiciona ao carrinho com quantidade inicial de 1
-        carrinho.push({
-            id: produto.id,
-            nome: produto.nome,
-            preco: produto.preco,
-            quantidade: 1
-        });
-
-        // Salva o carrinho atualizado no localStorage
+        carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, quantidade: 1 });
         localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho));
-
-        // Altera o visual do botão para mostrar que foi adicionado (cumprindo a sua restrição)
         elementoBotao.textContent = "✅ Adicionado";
         elementoBotao.classList.remove('btn-primario');
         elementoBotao.classList.add('btn-sucesso');
-        elementoBotao.disabled = true; // Desativa o botão para não adicionar duplicados aqui
-
-        // Atualiza o número no botão do rodapé
+        elementoBotao.disabled = true;
         atualizarContador();
     }
 };
 
-// Função para atualizar o número de itens no botão do carrinho
 function atualizarContador() {
     const contador = document.getElementById('contador-carrinho');
-    if (contador) {
-        contador.textContent = carrinho.length;
-    }
+    if (contador) contador.textContent = carrinho.length;
 }
+
+// NOVA FUNÇÃO: Desenha os itens na tela do carrinho e calcula o total
+window.renderizarCarrinho = function() {
+    const container = document.getElementById('itens-carrinho');
+    const valorTotalElemento = document.getElementById('valor-total');
+    
+    // Limpa o que estava na tela antes de redesenhar
+    container.innerHTML = '';
+    let total = 0;
+
+    // Se estiver vazio, avisa o cliente
+    if (carrinho.length === 0) {
+        container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">O seu carrinho está vazio. 🥺</p>';
+        valorTotalElemento.textContent = '0';
+        return;
+    }
+
+    // Passa por cada item no carrinho
+    carrinho.forEach((item, index) => {
+        const subtotal = item.preco * item.quantidade;
+        total += subtotal; // Vai somando ao total do pedido
+
+        const div = document.createElement('div');
+        div.className = 'carrinho-item';
+        div.innerHTML = `
+            <div class="carrinho-info">
+                <strong>${item.nome}</strong><br>
+                <span style="color: #666;">${item.preco} Kz un.</span><br>
+                <button class="btn-remover" onclick="removerItem(${index})">🗑️ Remover</button>
+            </div>
+            
+            <div class="carrinho-controles">
+                <button class="btn-qtd" onclick="alterarQuantidade(${index}, -1)">➖</button>
+                <span style="font-weight: bold; font-size: 1.1em; width: 25px; text-align: center;">${item.quantidade}</span>
+                <button class="btn-qtd" onclick="alterarQuantidade(${index}, 1)">➕</button>
+            </div>
+            
+            <div style="font-weight: bold; width: 90px; text-align: right; color: var(--cor-vermelho);">
+                ${subtotal} Kz
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    // Atualiza o texto do total na tela
+    valorTotalElemento.textContent = total;
+};
+
+// NOVA FUNÇÃO: Aumenta ou diminui a quantidade
+window.alterarQuantidade = function(index, mudanca) {
+    carrinho[index].quantidade += mudanca;
+    
+    // Se a quantidade chegar a 0, remove o item
+    if (carrinho[index].quantidade <= 0) {
+        removerItem(index);
+    } else {
+        localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho));
+        renderizarCarrinho(); // Atualiza a tela imediatamente
+    }
+};
+
+// NOVA FUNÇÃO: Remove um item do carrinho
+window.removerItem = function(index) {
+    carrinho.splice(index, 1); // Remove o item da lista
+    localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho)); // Salva no telemóvel
+    renderizarCarrinho(); // Atualiza a tela
+};
