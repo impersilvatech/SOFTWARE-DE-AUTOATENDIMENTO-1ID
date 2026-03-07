@@ -4,11 +4,11 @@
 :root {
     --cor-fundo: #f4f6f8;
     --cor-texto: #333333;
-    --cor-amarelo: #ffc107; /* Destaque principal */
-    --cor-azul: #007bff;   /* Confirmação */
-    --cor-cinza-escuro: #343a40; /* Botões padrão */
-    --cor-vermelho: #dc3545; /* Remover itens */
-    --cor-verde: #28a745; /* Adicionado / Sucesso */
+    --cor-amarelo: #ffc107;
+    --cor-azul: #007bff;
+    --cor-cinza-escuro: #343a40;
+    --cor-vermelho: #dc3545;
+    --cor-verde: #4caf50; /* Um verde mais suave e elegante */
     --sombra-cartao: 0 4px 6px rgba(0, 0, 0, 0.1);
     --borda-raio: 8px;
 }
@@ -24,18 +24,15 @@ body {
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
     line-height: 1.6;
-    padding-bottom: 90px; /* Aumentei para dar espaço para o novo rodapé fixo */
+    padding-bottom: 90px;
 }
 
 .container {
-    max-width: 600px; /* Mantém com aspecto de app mesmo no PC */
+    max-width: 600px;
     margin: 0 auto;
     padding: 20px;
 }
 
-/* =========================================
-   CABEÇALHOS
-   ========================================= */
 header {
     padding: 20px;
     border-radius: var(--borda-raio);
@@ -47,16 +44,13 @@ header {
 
 .header-amarelo {
     background-color: var(--cor-amarelo);
-    color: var(--cor-cinza-escuro); /* Texto escuro para contrastar com o amarelo */
+    color: var(--cor-cinza-escuro);
 }
 
 .header-azul {
     background-color: var(--cor-azul);
 }
 
-/* =========================================
-   CARTÕES (CARDS)
-   ========================================= */
 .card {
     background-color: #ffffff;
     padding: 20px;
@@ -65,9 +59,6 @@ header {
     margin-bottom: 15px;
 }
 
-/* =========================================
-   FORMULÁRIOS
-   ========================================= */
 .form-group {
     margin-bottom: 15px;
 }
@@ -88,15 +79,8 @@ header {
     font-size: 16px;
 }
 
-.form-group input:focus, 
-.form-group select:focus {
-    outline: none;
-    border-color: var(--cor-amarelo);
-    box-shadow: 0 0 5px rgba(255, 193, 7, 0.5);
-}
-
 /* =========================================
-   BOTÕES
+   BOTÕES GERAIS
    ========================================= */
 button {
     width: 100%;
@@ -114,10 +98,6 @@ button {
     color: #ffffff;
 }
 
-.btn-primario:hover {
-    background-color: #23272b;
-}
-
 .btn-sucesso {
     background-color: var(--cor-verde);
     color: #ffffff;
@@ -129,7 +109,7 @@ button {
 }
 
 /* =========================================
-   BARRA DE NAVEGAÇÃO (RODAPÉ)
+   BARRA DE NAVEGAÇÃO (RODAPÉ) - BOTÕES MAIS FINOS
    ========================================= */
 .nav-inferior {
     position: fixed;
@@ -145,7 +125,44 @@ button {
 }
 
 .nav-inferior button {
-    width: 45%; /* Para caberem dois botões lado a lado */
+    width: 48%; /* Ocupam bem o espaço lateral */
+    padding: 10px 5px; /* REDUZIDO a altura do botão */
+    font-size: 14px; /* Letra ligeiramente menor para combinar */
+    height: 45px; /* Altura fixa e fina */
+    border-radius: 20px; /* Cantos um pouco mais redondos como na sua imagem */
+}
+
+/* =========================================
+   NOTIFICAÇÕES FLUTUANTES (TOAST)
+   ========================================= */
+.toast-notificacao {
+    position: fixed;
+    top: -100px; /* Começa escondido em cima */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--cor-verde);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.4s ease; /* Animação suave */
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+}
+
+/* Classe que o JavaScript adiciona para a notificação descer e aparecer */
+.toast-notificacao.mostrar {
+    top: 20px;
+    opacity: 1;
+}
+
+.toast-erro {
+    background-color: var(--cor-vermelho);
 }
 
 /* =========================================
@@ -154,10 +171,10 @@ button {
 .total-container {
     font-size: 1.2em;
     font-weight: bold;
-    text-align: center; /* CENTRALIZADO CONFORME PEDIDO */
+    text-align: center;
     margin: 20px 0;
     padding: 15px;
     background-color: #e9ecef;
     border-radius: var(--borda-raio);
     color: var(--cor-cinza-escuro);
-}
+       }
