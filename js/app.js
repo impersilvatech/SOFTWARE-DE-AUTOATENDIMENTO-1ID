@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================
     const formCliente = document.getElementById('form-cliente');
     if (formCliente) {
-        // NOVIDADE: Limpa o carrinho e os dados antigos sempre que abrir a página inicial
         localStorage.removeItem('carrinhoCatalogo');
         localStorage.removeItem('clienteCatalogo');
         carrinho = []; 
@@ -42,14 +41,12 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         }
 
-        // Criámos uma função para desenhar o menu, assim podemos atualizá-lo facilmente
         window.renderizarMenu = function() {
-            listaProdutos.innerHTML = ''; // Limpa a lista antes de desenhar
+            listaProdutos.innerHTML = ''; 
             
             produtos.forEach(produto => {
                 const jaNoCarrinho = carrinho.find(item => item.id === produto.id);
                 
-                // NOVIDADE: Alterna entre o botão de Adicionar e o de Remover
                 let htmlBotao = '';
                 if (jaNoCarrinho) {
                     htmlBotao = `<button class="btn-perigo" onclick="removerDoMenu(${produto.id})">🗑️ Remover</button>`;
@@ -73,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
             atualizarContador();
         };
 
-        // Chama a função para desenhar os produtos na tela
         renderizarMenu();
 
         document.getElementById('btn-ver-carrinho').addEventListener('click', () => {
@@ -90,7 +86,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('btn-confirmar').addEventListener('click', () => {
             if (carrinho.length === 0) {
-                alert('O seu carrinho está vazio! Adicione produtos antes de confirmar.');
+                // AQUI: Usamos a nova notificação em vez de alert()
+                mostrarNotificacao('O seu carrinho está vazio! Adicione produtos.', 'erro');
                 return;
             }
             window.location.href = 'confirmacao.html';
@@ -134,8 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('resumo-total').textContent = totalPedido;
 
         document.getElementById('btn-whatsapp').addEventListener('click', () => {
-            // NÚMERO DA LOJA
-            const numeroLoja = "244954288128"; 
+            const numeroLoja = "244999999999"; 
 
             let mensagem = `✅ Pedido Confirmado!\n`;
             mensagem += `Nome do cliente: ${cliente.nome}\n`;
@@ -153,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const urlWhatsapp = `https://wa.me/${numeroLoja}?text=${mensagemCodificada}`;
 
             window.open(urlWhatsapp, '_blank');
-            // Após enviar, volta para a página inicial (que agora vai limpar os dados automaticamente)
             window.location.href = 'index.html';
         });
     }
@@ -163,22 +158,47 @@ document.addEventListener('DOMContentLoaded', () => {
 // FUNÇÕES GLOBAIS
 // =========================================
 
+// NOVA FUNÇÃO: Cria a notificação bonita na tela
+window.mostrarNotificacao = function(mensagem, tipo = 'sucesso') {
+    // Cria a caixinha da notificação
+    const toast = document.createElement('div');
+    toast.className = `toast-notificacao ${tipo === 'erro' ? 'toast-erro' : ''}`;
+    toast.textContent = mensagem;
+    
+    // Adiciona na tela
+    document.body.appendChild(toast);
+
+    // Faz ela descer (animação)
+    setTimeout(() => {
+        toast.classList.add('mostrar');
+    }, 10);
+
+    // Depois de 3 segundos, faz ela subir e desaparece
+    setTimeout(() => {
+        toast.classList.remove('mostrar');
+        setTimeout(() => toast.remove(), 400); // Remove totalmente do HTML
+    }, 3000);
+};
+
 window.adicionarAoCarrinho = function(idProduto) {
     const produto = produtos.find(p => p.id === idProduto);
     if (produto) {
         carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, quantidade: 1 });
         localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho));
-        if (window.renderizarMenu) renderizarMenu(); // Atualiza a tela do menu
+        
+        // AQUI: Chama a notificação flutuante de sucesso
+        mostrarNotificacao(`${produto.nome} adicionado ao carrinho!`, 'sucesso');
+        
+        if (window.renderizarMenu) renderizarMenu(); 
     }
 };
 
-// NOVIDADE: Função para remover diretamente da página de Menu
 window.removerDoMenu = function(idProduto) {
     const index = carrinho.findIndex(item => item.id === idProduto);
     if (index !== -1) {
         carrinho.splice(index, 1);
         localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho));
-        if (window.renderizarMenu) renderizarMenu(); // Atualiza a tela do menu
+        if (window.renderizarMenu) renderizarMenu(); 
     }
 };
 
