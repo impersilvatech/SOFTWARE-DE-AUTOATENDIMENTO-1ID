@@ -4,6 +4,7 @@
 
 let carrinho = JSON.parse(localStorage.getItem('carrinhoCatalogo')) || [];
 
+// Ouve quando a página carrega
 document.addEventListener('DOMContentLoaded', () => {
     
     // =========================================
@@ -12,13 +13,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const formCliente = document.getElementById('form-cliente');
     if (formCliente) {
         formCliente.addEventListener('submit', function(evento) {
-            evento.preventDefault();
+            evento.preventDefault(); // ISSO IMPEDE A PÁGINA DE RECARREGAR!
+            
             const dadosCliente = {
                 nome: document.getElementById('nome').value,
                 provincia: document.getElementById('provincia').value,
                 municipio: document.getElementById('municipio').value,
                 bairro: document.getElementById('bairro').value
             };
+            
             localStorage.setItem('clienteCatalogo', JSON.stringify(dadosCliente));
             window.location.href = 'menu.html';
         });
@@ -70,10 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // =========================================
     const containerCarrinho = document.getElementById('itens-carrinho');
     if (containerCarrinho) {
-        // Quando a página abre, desenha o carrinho imediatamente
         renderizarCarrinho();
 
-        // Configura o botão de confirmar pedido
         document.getElementById('btn-confirmar').addEventListener('click', () => {
             if (carrinho.length === 0) {
                 alert('O seu carrinho está vazio! Adicione produtos antes de confirmar.');
@@ -82,15 +83,14 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'confirmacao.html';
         });
     }
-});
-// =========================================
+
+    // =========================================
     // 4. TELA DE CONFIRMAÇÃO (confirmacao.html)
     // =========================================
     const resumoItens = document.getElementById('resumo-itens');
     if (resumoItens) {
         const clienteGuardado = localStorage.getItem('clienteCatalogo');
         
-        // Se não houver cliente ou carrinho vazio, manda para o início
         if (!clienteGuardado || carrinho.length === 0) {
             window.location.href = 'index.html';
             return;
@@ -98,14 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const cliente = JSON.parse(clienteGuardado);
         
-        // Preenche os dados do cliente na tela
         document.getElementById('resumo-nome').textContent = cliente.nome;
         document.getElementById('resumo-local').textContent = `${cliente.provincia} / ${cliente.municipio}`;
         document.getElementById('resumo-endereco').textContent = cliente.bairro;
 
-        // Preenche os itens na tela
         let totalPedido = 0;
-        resumoItens.innerHTML = ''; // Limpa a área
+        resumoItens.innerHTML = ''; 
         
         carrinho.forEach(item => {
             const subtotal = item.preco * item.quantidade;
@@ -120,19 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
             resumoItens.appendChild(linha);
         });
 
-        // Atualiza o total
         document.getElementById('resumo-total').textContent = totalPedido;
 
-        // Configura o botão do WhatsApp
         document.getElementById('btn-whatsapp').addEventListener('click', () => {
-            // NÚMERO DO VENDEDOR (coloque aqui o número da sua loja com o código do país, ex: 244999999999)
+            // NÚMERO DA LOJA AQUI
             const numeroLoja = "244999999999"; 
 
-            // Monta a mensagem exatamente como você pediu
             let mensagem = `✅ Pedido Confirmado!\n`;
             mensagem += `Nome do cliente: ${cliente.nome}\n`;
-            mensagem += `província/município: ${cliente.provincia} / ${cliente.municipio}\n`;
-            mensagem += `rua/bairro: ${cliente.bairro}\n\n`;
+            mensagem += `Província/Município: ${cliente.provincia} / ${cliente.municipio}\n`;
+            mensagem += `Rua/Bairro: ${cliente.bairro}\n\n`;
 
             carrinho.forEach(item => {
                 mensagem += `${item.quantidade}x ${item.nome} - ${item.preco} Kz\n`;
@@ -141,24 +136,18 @@ document.addEventListener('DOMContentLoaded', () => {
             mensagem += `\nTotal: ${totalPedido} Kz\n`;
             mensagem += `Obrigado pela preferência!`;
 
-            // Codifica o texto para formato de URL da internet (transforma espaços em %20, etc.)
             const mensagemCodificada = encodeURIComponent(mensagem);
-            
-            // Cria o link do WhatsApp
             const urlWhatsapp = `https://wa.me/${numeroLoja}?text=${mensagemCodificada}`;
 
-            // Limpa o carrinho após enviar o pedido (opcional, mas recomendado)
             localStorage.removeItem('carrinhoCatalogo');
-
-            // Abre o WhatsApp numa nova aba
             window.open(urlWhatsapp, '_blank');
-            
-            // Opcional: redirecionar de volta à tela inicial depois de pedir
             window.location.href = 'index.html';
         });
     }
+}); // FIM DA LEITURA DAS PÁGINAS (MUITO IMPORTANTE ESTA LINHA!)
+
 // =========================================
-// FUNÇÕES GLOBAIS
+// FUNÇÕES GLOBAIS (Não podem estar dentro do DOMContentLoaded)
 // =========================================
 
 window.adicionarAoCarrinho = function(idProduto, elementoBotao) {
@@ -179,26 +168,22 @@ function atualizarContador() {
     if (contador) contador.textContent = carrinho.length;
 }
 
-// NOVA FUNÇÃO: Desenha os itens na tela do carrinho e calcula o total
 window.renderizarCarrinho = function() {
     const container = document.getElementById('itens-carrinho');
     const valorTotalElemento = document.getElementById('valor-total');
     
-    // Limpa o que estava na tela antes de redesenhar
     container.innerHTML = '';
     let total = 0;
 
-    // Se estiver vazio, avisa o cliente
     if (carrinho.length === 0) {
         container.innerHTML = '<p style="text-align: center; color: #666; padding: 20px;">O seu carrinho está vazio. 🥺</p>';
         valorTotalElemento.textContent = '0';
         return;
     }
 
-    // Passa por cada item no carrinho
     carrinho.forEach((item, index) => {
         const subtotal = item.preco * item.quantidade;
-        total += subtotal; // Vai somando ao total do pedido
+        total += subtotal;
 
         const div = document.createElement('div');
         div.className = 'carrinho-item';
@@ -222,26 +207,21 @@ window.renderizarCarrinho = function() {
         container.appendChild(div);
     });
 
-    // Atualiza o texto do total na tela
     valorTotalElemento.textContent = total;
 };
 
-// NOVA FUNÇÃO: Aumenta ou diminui a quantidade
 window.alterarQuantidade = function(index, mudanca) {
     carrinho[index].quantidade += mudanca;
-    
-    // Se a quantidade chegar a 0, remove o item
     if (carrinho[index].quantidade <= 0) {
         removerItem(index);
     } else {
         localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho));
-        renderizarCarrinho(); // Atualiza a tela imediatamente
+        renderizarCarrinho(); 
     }
 };
 
-// NOVA FUNÇÃO: Remove um item do carrinho
 window.removerItem = function(index) {
-    carrinho.splice(index, 1); // Remove o item da lista
-    localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho)); // Salva no telemóvel
-    renderizarCarrinho(); // Atualiza a tela
+    carrinho.splice(index, 1);
+    localStorage.setItem('carrinhoCatalogo', JSON.stringify(carrinho)); 
+    renderizarCarrinho(); 
 };
