@@ -199,11 +199,3 @@ button {
     gap: 15px; /* Espaço entre o logo e o texto */
     text-align: left; /* O texto passa a ficar alinhado à esquerda */
 }
-
-.logo-loja {
-  width: 150px;
-  height: auto;
-  background-color: #1f3a93; /* azul escuro */
-  padding: 12px;
-  border-radius: 12px;       /* cantos arredondados */
-}
