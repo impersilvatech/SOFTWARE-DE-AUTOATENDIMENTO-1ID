@@ -178,3 +178,15 @@ button {
     border-radius: var(--borda-raio);
     color: var(--cor-cinza-escuro);
        }
+
+.header-amarelo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px; /* espaço entre logo e texto */
+}
+
+.logo-loja {
+  width: 80px;   /* menor largura */
+  height: auto;
+}
