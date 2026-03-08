@@ -1,2 +1,2 @@
-# SOFTWARE-DE-AUTOATENDIMENTO-1ID
-Software para autoatendimento de pedidos de Restauração e Fast-Food
+# SOFTWARE-DE-COSTUMIZACAO-1ID
+Software para customização de pedidos de Restauração e Fast-Food...
