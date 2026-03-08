@@ -179,14 +179,16 @@ button {
     color: var(--cor-cinza-escuro);
        }
 
-.header-amarelo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 15px; /* espaço entre logo e texto */
-}
-
+/* =========================================
+   LOGÓTIPO DA LOJA
+   ========================================= */
 .logo-loja {
-  width: 80px;   /* menor largura */
-  height: auto;
+    width: 80px;             /* Largura do logo */
+    height: 80px;            /* Altura do logo */
+    object-fit: cover;       /* Garante que a imagem não fica esticada */
+    border-radius: 50%;      /* Deixa o logo perfeitamente redondo! Se quiser quadrado, apague esta linha */
+    margin: 0 auto 10px auto;/* Centraliza e dá um pequeno espaço abaixo */
+    display: block;          /* Necessário para o logo ficar no centro */
+    border: 3px solid rgba(255, 255, 255, 0.8); /* Borda branca transparente elegante */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);      /* Sombra leve */
 }
