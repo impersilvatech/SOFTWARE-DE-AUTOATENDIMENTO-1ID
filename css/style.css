@@ -199,3 +199,152 @@ button {
     gap: 15px; /* Espaço entre o logo e o texto */
     text-align: left; /* O texto passa a ficar alinhado à esquerda */
 }
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f2f2f2;
+    color: #222;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 16px 40px;
+}
+
+/* ── Contentor principal ── */
+.container.welcome-container {
+    width: 100%;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── Card amarelo (header) ── */
+.header-amarelo {
+    background: #F9B900;
+    border-radius: 18px 18px 18px 18px;
+    padding: 32px 24px 28px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 18px rgba(249,185,0,0.25);
+}
+
+.header-amarelo h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.header-amarelo p {
+    font-size: 0.97rem;
+    color: #3a3000;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+}
+
+/* Logo marca d'água no fundo do card amarelo */
+.header-amarelo .logo-fundo {
+    position: absolute;
+    bottom: -18px;
+    right: -18px;
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    opacity: 0.15;
+    pointer-events: none;
+    user-select: none;
+}
+
+/* ── Card branco (formulário) ── */
+.card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 28px 22px 24px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+
+/* ── Grupos do formulário ── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: #222;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 0.93rem;
+    color: #333;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: auto;
+    font-family: inherit;
+}
+
+.form-group input::placeholder {
+    color: #bbb;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #F9B900;
+    box-shadow: 0 0 0 3px rgba(249,185,0,0.18);
+}
+
+/* ── Botão principal ── */
+.btn-primario {
+    width: 100%;
+    padding: 14px;
+    margin-top: 6px;
+    border: none;
+    border-radius: 12px;
+    background: #1e1e2e;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.02em;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+    font-family: inherit;
+}
+
+.btn-primario:hover {
+    background: #2e2e45;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.22);
+}
+
+.btn-primario:active {
+    transform: scale(0.98);
+}
+
+/* ── Responsivo ── */
+@media (max-width: 400px) {
+    .header-amarelo h1 { font-size: 1.6rem; }
+    .card { padding: 22px 16px 20px; }
+}
