@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Bem-vindo | Catálogo de Pedidos</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f0f13;
+  --bg2:#18181f;
+  --card:#1e1e28;
+  --border:#2a2a38;
+  --orange:#ff6b2b;
+  --orange2:#ff8c00;
+  --red:#ff3b3b;
+  --green:#22c55e;
+  --white:#fff;
+  --muted:#9999bb;
+  --muted2:#55556a;
+  --ft:'Righteous',cursive;
+  --fb:'Nunito',sans-serif;
+  --r:14px;
+  --tr:all .3s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--fb);
+  background:var(--bg);
+  color:var(--white);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* Background pattern */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 20% 20%,rgba(255,107,43,.12) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 80%,rgba(255,59,59,.08) 0%,transparent 50%);
+  pointer-events:none;z-index:0;
+}
+
+/* PROGRESS BAR */
+.progress-bar{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;padding:20px 24px;
+  position:relative;z-index:1;
+}
+.step{display:flex;align-items:center;gap:0}
+.step-circle{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--ft);font-size:.85rem;font-weight:700;
+  transition:var(--tr);flex-shrink:0;
+}
+.step-circle.done{background:var(--orange);color:#fff;box-shadow:0 0 16px rgba(255,107,43,.4)}
+.step-circle.active{background:var(--orange);color:#fff;box-shadow:0 0 20px rgba(255,107,43,.5);transform:scale(1.1)}
+.step-circle.idle{background:var(--border);color:var(--muted2)}
+.step-label{font-size:.68rem;font-weight:700;color:var(--muted);margin:0 4px;white-space:nowrap;display:none}
+@media(min-width:360px){.step-label{display:block}}
+.step-line{width:32px;height:2px;background:var(--border);flex-shrink:0}
+.step-line.done{background:var(--orange)}
+
+/* HERO */
+.hero{
+  text-align:center;padding:20px 24px 8px;
+  position:relative;z-index:1;
+}
+.hero-logo{
+  width:90px;height:90px;border-radius:24px;
+  background:linear-gradient(135deg,var(--orange),var(--red));
+  margin:0 auto 16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2.4rem;
+  box-shadow:0 12px 40px rgba(255,107,43,.4);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.hero h1{
+  font-family:var(--ft);font-size:clamp(1.6rem,6vw,2.2rem);
+  background:linear-gradient(135deg,var(--orange),var(--orange2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:8px;
+}
+.hero p{color:var(--muted);font-size:.95rem}
+
+/* CARD FORM */
+.form-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:24px;
+  margin:20px 16px;
+  padding:28px 22px;
+  position:relative;z-index:1;
+  box-shadow:0 8px 40px rgba(0,0,0,.4);
+}
+.form-card h2{
+  font-family:var(--ft);font-size:1.1rem;color:var(--orange);
+  margin-bottom:20px;display:flex;align-items:center;gap:8px;
+}
+.form-group{margin-bottom:18px}
+.form-group label{
+  display:block;font-size:.8rem;font-weight:700;
+  color:var(--muted);letter-spacing:.5px;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.form-group input,
+.form-group select{
+  width:100%;padding:14px 16px;
+  background:var(--bg2);border:1.5px solid var(--border);
+  border-radius:var(--r);
+  font-family:var(--fb);font-size:.95rem;color:var(--white);
+  outline:none;transition:var(--tr);appearance:none;
+}
+.form-group input:focus,
+.form-group select:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 4px rgba(255,107,43,.12);
+}
+.form-group input::placeholder{color:var(--muted2)}
+.form-group select option{background:var(--bg2)}
+.select-wrap{position:relative}
+.select-wrap::after{
+  content:'▼';position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  font-size:.65rem;color:var(--muted);pointer-events:none;
+}
+
+/* SUBMIT BTN */
+.btn-submit{
+  width:100%;padding:16px;margin-top:8px;
+  background:linear-gradient(135deg,var(--orange),var(--orange2));
+  border:none;border-radius:var(--r);
+  font-family:var(--ft);font-size:1.1rem;color:#fff;
+  cursor:pointer;transition:var(--tr);
+  box-shadow:0 8px 24px rgba(255,107,43,.4);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-submit:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(255,107,43,.5)}
+.btn-submit:active{transform:scale(.98)}
+
+/* BOTTOM INFO */
+.bottom-info{
+  text-align:center;padding:16px 24px 32px;
+  font-size:.8rem;color:var(--muted2);
+  position:relative;z-index:1;
+}
+.bottom-info span{color:var(--orange);font-weight:700}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--card);border:1px solid var(--border);
+  border-radius:50px;padding:12px 24px;
+  font-size:.9rem;font-weight:700;white-space:nowrap;
+  z-index:9999;transition:transform .4s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.sucesso{border-color:var(--green);color:var(--green)}
+.toast.erro{border-color:var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="step">
+    <div class="step-circle active">1</div>
+    <span class="step-label" style="color:var(--orange)">Dados</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step">
+    <div class="step-circle idle">2</div>
+    <span class="step-label">Menu</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step">
+    <div class="step-circle idle">3</div>
+    <span class="step-label">Carrinho</span>
+  </div>
+  <div class="step-line"></div>
+  <div class="step">
+    <div class="step-circle idle">4</div>
+    <span class="step-label">Confirmar</span>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-logo">🍔</div>
+  <h1>Bem-vindo!</h1>
+  <p>Preencha os seus dados para iniciar o pedido</p>
+</div>
+
+<!-- Form -->
+<div class="form-card">
+  <h2>📋 Os seus dados</h2>
+  <form id="form-cliente">
+
+    <div class="form-group">
+      <label>Nome completo</label>
+      <input type="text" id="nome" placeholder="Ex: Emílio da Silva" required/>
+    </div>
+
+    <div class="form-group">
+      <label>Província</label>
+      <div class="select-wrap">
+        <select id="provincia" required>
+          <option value="" disabled selected>Selecione a província...</option>
+          <option>Bengo</option><option>Benguela</option><option>Bié</option>
+          <option>Cabinda</option><option>Cuando Cubango</option>
+          <option>Cuanza Norte</option><option>Cuanza Sul</option>
+          <option>Cunene</option><option>Huambo</option><option>Huíla</option>
+          <option>Icolo e Bengo</option><option>Luanda</option>
+          <option>Lunda Norte</option><option>Lunda Sul</option>
+          <option>Malanje</option><option>Moxico</option>
+          <option>Namibe</option><option>Uíge</option><option>Zaire</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Município</label>
+      <input type="text" id="municipio" placeholder="Ex: Huambo, Caála..." required/>
+    </div>
+
+    <div class="form-group">
+      <label>Rua / Bairro</label>
+      <input type="text" id="bairro" placeholder="Ex: Bairro Benfica, Rua Bié" required/>
+    </div>
+
+    <button type="submit" class="btn-submit">
+      Ver o Menu &nbsp;🍽️
+    </button>
+  </form>
+</div>
+
+<div class="bottom-info">
+  Entrega disponível em <span>toda Angola</span> · Pedido via WhatsApp
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function toast(msg, tipo='sucesso'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + tipo;
+  setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+document.getElementById('form-cliente').addEventListener('submit', function(e){
+  e.preventDefault();
+  const nome = document.getElementById('nome').value.trim();
+  const provincia = document.getElementById('provincia').value;
+  const municipio = document.getElementById('municipio').value.trim();
+  const bairro = document.getElementById('bairro').value.trim();
+
+  if(!nome||!provincia||!municipio||!bairro){
+    toast('Preencha todos os campos!','erro'); return;
+  }
+
+  localStorage.removeItem('carrinhoCatalogo');
+  localStorage.setItem('clienteCatalogo', JSON.stringify({nome,provincia,municipio,bairro}));
+  window.location.href='menu.html';
+});
+</script>
+</body>
+</html>

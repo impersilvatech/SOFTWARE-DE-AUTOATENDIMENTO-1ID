@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Carrinho | Catálogo de Pedidos</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f0f13;--bg2:#18181f;--card:#1e1e28;--border:#2a2a38;
+  --orange:#ff6b2b;--orange2:#ff8c00;--red:#ff3b3b;--green:#22c55e;
+  --white:#fff;--muted:#9999bb;--muted2:#55556a;
+  --ft:'Righteous',cursive;--fb:'Nunito',sans-serif;
+  --r:14px;--tr:all .3s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--white);min-height:100vh;padding-bottom:110px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 80% 0%,rgba(255,59,59,.1) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* PROGRESS */
+.progress-bar{display:flex;align-items:center;justify-content:center;gap:0;padding:16px 24px;position:relative;z-index:1}
+.step{display:flex;align-items:center;gap:0}
+.step-circle{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ft);font-size:.82rem;font-weight:700;transition:var(--tr);flex-shrink:0}
+.step-circle.done{background:var(--orange);color:#fff;box-shadow:0 0 14px rgba(255,107,43,.4)}
+.step-circle.active{background:var(--orange);color:#fff;box-shadow:0 0 18px rgba(255,107,43,.5);transform:scale(1.1)}
+.step-circle.idle{background:var(--border);color:var(--muted2)}
+.step-line{width:28px;height:2px;background:var(--border)}
+.step-line.done{background:var(--orange)}
+.step-label{font-size:.65rem;font-weight:700;color:var(--muted);margin:0 3px;display:none}
+@media(min-width:360px){.step-label{display:block}}
+
+/* HEADER */
+.page-header{padding:8px 16px 0;position:relative;z-index:1}
+.page-header h1{font-family:var(--ft);font-size:1.5rem;display:flex;align-items:center;gap:10px}
+.page-header p{color:var(--muted);font-size:.85rem;margin-top:4px}
+
+/* ITEMS */
+.items-list{display:flex;flex-direction:column;gap:10px;padding:16px;position:relative;z-index:1}
+
+.cart-item{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  padding:14px;display:flex;gap:12px;align-items:center;
+  transition:var(--tr);animation:fadeIn .3s ease both;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.cart-item:hover{border-color:rgba(255,107,43,.25)}
+.item-emoji{
+  width:56px;height:56px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--bg2),var(--border));
+  display:flex;align-items:center;justify-content:center;font-size:1.6rem;
+}
+.item-info{flex:1;min-width:0}
+.item-nome{font-family:var(--ft);font-size:.9rem;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-preco{font-size:.78rem;color:var(--muted)}
+.item-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+.item-subtotal{font-family:var(--ft);font-size:.95rem;color:var(--orange)}
+.qtd-row{display:flex;align-items:center;gap:0;background:var(--bg2);border-radius:50px;border:1px solid var(--border)}
+.btn-q{width:30px;height:30px;border:none;background:transparent;color:var(--white);font-size:.95rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
+.btn-q:hover{color:var(--orange)}
+.q-num{min-width:26px;text-align:center;font-family:var(--ft);font-size:.82rem}
+.btn-del{
+  background:none;border:none;color:var(--muted2);font-size:.9rem;cursor:pointer;
+  padding:4px;transition:var(--tr);
+}
+.btn-del:hover{color:var(--red)}
+
+/* EMPTY */
+.empty{text-align:center;padding:56px 24px;position:relative;z-index:1}
+.empty-ico{font-size:4rem;margin-bottom:16px}
+.empty h2{font-family:var(--ft);font-size:1.3rem;margin-bottom:8px;color:var(--muted)}
+.empty p{color:var(--muted2);font-size:.9rem;margin-bottom:24px}
+.btn-menu{
+  padding:14px 32px;background:var(--orange);border:none;border-radius:50px;
+  font-family:var(--ft);color:#fff;cursor:pointer;transition:var(--tr);
+  box-shadow:0 6px 20px rgba(255,107,43,.35);
+}
+.btn-menu:hover{transform:translateY(-2px)}
+
+/* SUMMARY CARD */
+.summary-card{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  margin:0 16px;padding:18px;position:relative;z-index:1;
+}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:.9rem}
+.summary-row:last-child{border-bottom:none}
+.summary-row .label{color:var(--muted)}
+.summary-row .val{font-weight:700}
+.summary-total{display:flex;justify-content:space-between;align-items:center;padding:14px 0 0}
+.summary-total .label{font-family:var(--ft);font-size:1rem}
+.summary-total .val{font-family:var(--ft);font-size:1.4rem;color:var(--orange)}
+
+/* NOTE */
+.note-card{
+  background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+  margin:12px 16px;padding:14px;position:relative;z-index:1;
+}
+.note-card label{font-size:.75rem;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:8px}
+.note-card textarea{
+  width:100%;background:transparent;border:none;outline:none;
+  font-family:var(--fb);font-size:.88rem;color:var(--white);resize:none;
+  placeholder-color:var(--muted2);
+}
+.note-card textarea::placeholder{color:var(--muted2)}
+
+/* NAV */
+.nav-bottom{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  padding:12px 16px;background:rgba(15,15,19,.97);backdrop-filter:blur(20px);
+  border-top:1px solid var(--border);display:flex;gap:10px;
+}
+.btn-back{padding:12px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:50px;font-family:var(--ft);font-size:.85rem;color:var(--muted);cursor:pointer;transition:var(--tr)}
+.btn-back:hover{color:var(--white);border-color:var(--white)}
+.btn-confirm{flex:1;padding:14px;background:linear-gradient(135deg,var(--green),#16a34a);border:none;border-radius:50px;font-family:var(--ft);font-size:1rem;color:#fff;cursor:pointer;transition:var(--tr);box-shadow:0 6px 20px rgba(34,197,94,.35);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-confirm:hover{transform:translateY(-2px)}
+
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--card);border:1px solid var(--border);border-radius:50px;padding:10px 22px;font-size:.88rem;font-weight:700;white-space:nowrap;z-index:9999;transition:transform .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.sucesso{border-color:var(--green);color:var(--green)}
+.toast.erro{border-color:var(--red);color:var(--red)}
+</style>
+</head>
+<body>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="step"><div class="step-circle done">✓</div><span class="step-label">Dados</span></div>
+  <div class="step-line done"></div>
+  <div class="step"><div class="step-circle done">✓</div><span class="step-label">Menu</span></div>
+  <div class="step-line done"></div>
+  <div class="step"><div class="step-circle active">3</div><span class="step-label" style="color:var(--orange)">Carrinho</span></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-circle idle">4</div><span class="step-label">Confirmar</span></div>
+</div>
+
+<div class="page-header">
+  <h1>🛒 O Seu Carrinho</h1>
+  <p>Reveja os itens antes de confirmar</p>
+</div>
+
+<div id="conteudo"></div>
+
+<div class="toast" id="toast"></div>
+
+<div class="nav-bottom" id="nav-bottom" style="display:none">
+  <button class="btn-back" onclick="window.location.href='menu.html'">← Voltar</button>
+  <button class="btn-confirm" onclick="confirmar()">Confirmar Pedido ✅</button>
+</div>
+
+<script>
+let carrinho = JSON.parse(localStorage.getItem('carrinhoCatalogo'))||[];
+
+function salvar(){localStorage.setItem('carrinhoCatalogo',JSON.stringify(carrinho));}
+
+function toast(msg,tipo='sucesso'){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className='toast show '+tipo;
+  setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+function render(){
+  const el=document.getElementById('conteudo');
+  const nav=document.getElementById('nav-bottom');
+
+  if(carrinho.length===0){
+    nav.style.display='none';
+    el.innerHTML=`<div class="empty">
+      <div class="empty-ico">🛒</div>
+      <h2>Carrinho vazio</h2>
+      <p>Adicione produtos do menu para continuar</p>
+      <button class="btn-menu" onclick="window.location.href='menu.html'">Ir ao Menu 🍽️</button>
+    </div>`;
+    return;
+  }
+
+  nav.style.display='flex';
+  const totalKz=carrinho.reduce((s,i)=>s+i.preco*i.quantidade,0);
+  const totalItems=carrinho.reduce((s,i)=>s+i.quantidade,0);
+  const entrega=0;
+
+  let html=`<div class="items-list">`;
+  carrinho.forEach((item,idx)=>{
+    const sub=item.preco*item.quantidade;
+    html+=`<div class="cart-item">
+      <div class="item-emoji">${item.emoji||'🍴'}</div>
+      <div class="item-info">
+        <div class="item-nome">${item.nome}</div>
+        <div class="item-preco">${item.preco.toLocaleString()} Kz/un</div>
+      </div>
+      <div class="item-right">
+        <div class="item-subtotal">${sub.toLocaleString()} Kz</div>
+        <div class="qtd-row">
+          <button class="btn-q" onclick="diminuir(${idx})">−</button>
+          <span class="q-num">${item.quantidade}</span>
+          <button class="btn-q" onclick="aumentar(${idx})">+</button>
+        </div>
+        <button class="btn-del" onclick="remover(${idx})" title="Remover">🗑️</button>
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+
+  // Nota
+  const nota=localStorage.getItem('notaPedido')||'';
+  html+=`<div class="note-card">
+    <label>📝 Nota para o pedido (opcional)</label>
+    <textarea rows="2" placeholder="Ex: Sem cebola, molho extra..." id="nota" oninput="localStorage.setItem('notaPedido',this.value)">${nota}</textarea>
+  </div>`;
+
+  // Summary
+  html+=`<div class="summary-card">
+    <div class="summary-row"><span class="label">Itens (${totalItems})</span><span class="val">${totalKz.toLocaleString()} Kz</span></div>
+    <div class="summary-row"><span class="label">Entrega</span><span class="val" style="color:var(--green)">A combinar</span></div>
+    <div class="summary-total">
+      <span class="label">Total do Pedido</span>
+      <span class="val">${totalKz.toLocaleString()} Kz</span>
+    </div>
+  </div>`;
+
+  el.innerHTML=html;
+}
+
+function aumentar(idx){carrinho[idx].quantidade++;salvar();render();}
+function diminuir(idx){
+  carrinho[idx].quantidade--;
+  if(carrinho[idx].quantidade<=0)carrinho.splice(idx,1);
+  salvar();render();
+}
+function remover(idx){
+  const nome=carrinho[idx].nome;
+  carrinho.splice(idx,1);salvar();
+  toast(nome+' removido','erro');render();
+}
+function confirmar(){
+  if(carrinho.length===0){toast('O carrinho está vazio!','erro');return;}
+  window.location.href='confirmacao.html';
+}
+
+render();
+</script>
+</body>
+</html>

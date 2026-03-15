@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Confirmar Pedido | Catálogo</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Righteous&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#0f0f13;--bg2:#18181f;--card:#1e1e28;--border:#2a2a38;
+  --orange:#ff6b2b;--orange2:#ff8c00;--red:#ff3b3b;--green:#22c55e;
+  --white:#fff;--muted:#9999bb;--muted2:#55556a;
+  --ft:'Righteous',cursive;--fb:'Nunito',sans-serif;
+  --r:14px;--tr:all .3s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--white);min-height:100vh;padding-bottom:120px}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 50% 0%,rgba(34,197,94,.1) 0%,transparent 50%);pointer-events:none;z-index:0}
+
+/* PROGRESS */
+.progress-bar{display:flex;align-items:center;justify-content:center;gap:0;padding:16px 24px;position:relative;z-index:1}
+.step{display:flex;align-items:center;gap:0}
+.step-circle{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--ft);font-size:.82rem;transition:var(--tr);flex-shrink:0}
+.step-circle.done{background:var(--orange);color:#fff;box-shadow:0 0 14px rgba(255,107,43,.4)}
+.step-circle.active{background:var(--green);color:#fff;box-shadow:0 0 18px rgba(34,197,94,.5);transform:scale(1.1)}
+.step-circle.idle{background:var(--border);color:var(--muted2)}
+.step-line{width:28px;height:2px;background:var(--border)}
+.step-line.done{background:var(--orange)}
+.step-label{font-size:.65rem;font-weight:700;color:var(--muted);margin:0 3px;display:none}
+@media(min-width:360px){.step-label{display:block}}
+
+/* HEADER */
+.page-header{padding:8px 16px 16px;position:relative;z-index:1;text-align:center}
+.page-header h1{font-family:var(--ft);font-size:1.5rem;display:flex;align-items:center;justify-content:center;gap:10px}
+.page-header p{color:var(--muted);font-size:.88rem;margin-top:6px}
+
+/* SECTION CARD */
+.sec-card{
+  background:var(--card);border:1px solid var(--border);border-radius:18px;
+  margin:0 16px 12px;padding:18px;position:relative;z-index:1;
+}
+.sec-card h3{
+  font-family:var(--ft);font-size:.9rem;color:var(--orange);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px;
+  padding-bottom:10px;border-bottom:1px solid var(--border);
+}
+.info-row{display:flex;justify-content:space-between;align-items:flex-start;padding:6px 0;font-size:.9rem;border-bottom:1px solid rgba(255,255,255,.04)}
+.info-row:last-child{border-bottom:none}
+.info-row .lbl{color:var(--muted);font-size:.82rem;flex-shrink:0;margin-right:12px}
+.info-row .val{text-align:right;font-weight:600}
+
+/* ITEMS */
+.order-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.order-item:last-child{border-bottom:none}
+.oi-emoji{width:40px;height:40px;border-radius:10px;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.oi-nome{flex:1;font-size:.9rem;font-weight:600}
+.oi-qtd{font-size:.78rem;color:var(--muted)}
+.oi-sub{font-family:var(--ft);font-size:.88rem;color:var(--orange)}
+
+/* TOTAL */
+.total-block{
+  background:linear-gradient(135deg,rgba(255,107,43,.15),rgba(255,140,0,.08));
+  border:1px solid rgba(255,107,43,.3);border-radius:16px;
+  margin:0 16px 12px;padding:18px;position:relative;z-index:1;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.total-block .lbl{font-size:.85rem;color:var(--muted)}
+.total-block .val{font-family:var(--ft);font-size:1.8rem;color:var(--orange)}
+
+/* WA BANNER */
+.wa-banner{
+  background:linear-gradient(135deg,#128c7e,#25d366);
+  border-radius:16px;margin:0 16px 12px;padding:16px;
+  position:relative;z-index:1;
+  display:flex;align-items:center;gap:12px;
+}
+.wa-banner-ico{font-size:2rem;flex-shrink:0}
+.wa-banner h4{font-family:var(--ft);font-size:.95rem;margin-bottom:2px}
+.wa-banner p{font-size:.78rem;color:rgba(255,255,255,.8)}
+
+/* NAV */
+.nav-bottom{position:fixed;bottom:0;left:0;right:0;z-index:200;padding:12px 16px;background:rgba(15,15,19,.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;gap:10px}
+.btn-back{padding:12px 20px;background:var(--bg2);border:1px solid var(--border);border-radius:50px;font-family:var(--ft);font-size:.85rem;color:var(--muted);cursor:pointer;transition:var(--tr)}
+.btn-back:hover{color:var(--white);border-color:var(--white)}
+.btn-wa{
+  flex:1;padding:15px;
+  background:linear-gradient(135deg,#128c7e,#25d366);
+  border:none;border-radius:50px;
+  font-family:var(--ft);font-size:1rem;color:#fff;
+  cursor:pointer;transition:var(--tr);
+  box-shadow:0 6px 20px rgba(37,211,102,.35);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-wa:hover{transform:translateY(-2px)}
+
+/* SUCCESS OVERLAY */
+.success-overlay{
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:32px;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .5s;
+}
+.success-overlay.show{opacity:1;pointer-events:all}
+.success-ico{font-size:5rem;margin-bottom:20px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.success-overlay h2{font-family:var(--ft);font-size:1.8rem;color:var(--green);margin-bottom:12px}
+.success-overlay p{color:var(--muted);margin-bottom:32px;max-width:320px}
+.btn-novo{padding:16px 40px;background:var(--orange);border:none;border-radius:50px;font-family:var(--ft);font-size:1.1rem;color:#fff;cursor:pointer;box-shadow:0 8px 24px rgba(255,107,43,.4);transition:var(--tr)}
+.btn-novo:hover{transform:translateY(-2px)}
+</style>
+</head>
+<body>
+
+<!-- Progress -->
+<div class="progress-bar">
+  <div class="step"><div class="step-circle done">✓</div><span class="step-label">Dados</span></div>
+  <div class="step-line done"></div>
+  <div class="step"><div class="step-circle done">✓</div><span class="step-label">Menu</span></div>
+  <div class="step-line done"></div>
+  <div class="step"><div class="step-circle done">✓</div><span class="step-label">Carrinho</span></div>
+  <div class="step-line done"></div>
+  <div class="step"><div class="step-circle active">✓</div><span class="step-label" style="color:var(--green)">Confirmar</span></div>
+</div>
+
+<div class="page-header">
+  <h1>🧾 Resumo do Pedido</h1>
+  <p>Verifique os detalhes antes de enviar</p>
+</div>
+
+<div id="conteudo"></div>
+
+<!-- WA Banner -->
+<div class="wa-banner">
+  <div class="wa-banner-ico">💬</div>
+  <div>
+    <h4>Envio via WhatsApp</h4>
+    <p>O pedido será enviado directamente para o nosso número. Confirme e aguarde a nossa resposta!</p>
+  </div>
+</div>
+
+<!-- Nav -->
+<div class="nav-bottom">
+  <button class="btn-back" onclick="window.location.href='carrinho.html'">← Voltar</button>
+  <button class="btn-wa" id="btn-wa" onclick="enviar()">
+    📲 Enviar Pedido no WhatsApp
+  </button>
+</div>
+
+<!-- Success -->
+<div class="success-overlay" id="success">
+  <div class="success-ico">✅</div>
+  <h2>Pedido Enviado!</h2>
+  <p>O seu pedido foi enviado via WhatsApp. Aguarde a confirmação da nossa equipa em breve!</p>
+  <button class="btn-novo" onclick="novoP()">Fazer Novo Pedido 🍔</button>
+</div>
+
+<script>
+const carrinho = JSON.parse(localStorage.getItem('carrinhoCatalogo')||'[]');
+const cliente = JSON.parse(localStorage.getItem('clienteCatalogo')||'null');
+const nota = localStorage.getItem('notaPedido')||'';
+
+if(!cliente||carrinho.length===0){window.location.href='index.html';}
+
+function render(){
+  const el=document.getElementById('conteudo');
+  const total=carrinho.reduce((s,i)=>s+i.preco*i.quantidade,0);
+  const totalItems=carrinho.reduce((s,i)=>s+i.quantidade,0);
+
+  let html='';
+
+  // Dados cliente
+  html+=`<div class="sec-card">
+    <h3>📍 Dados de Entrega</h3>
+    <div class="info-row"><span class="lbl">Nome</span><span class="val">${cliente.nome}</span></div>
+    <div class="info-row"><span class="lbl">Província</span><span class="val">${cliente.provincia}</span></div>
+    <div class="info-row"><span class="lbl">Município</span><span class="val">${cliente.municipio}</span></div>
+    <div class="info-row"><span class="lbl">Bairro/Rua</span><span class="val">${cliente.bairro}</span></div>
+  </div>`;
+
+  // Items
+  html+=`<div class="sec-card"><h3>🛍️ Itens Pedidos (${totalItems})</h3>`;
+  carrinho.forEach(item=>{
+    html+=`<div class="order-item">
+      <div class="oi-emoji">${item.emoji||'🍴'}</div>
+      <div>
+        <div class="oi-nome">${item.nome}</div>
+        <div class="oi-qtd">${item.quantidade}x · ${item.preco.toLocaleString()} Kz/un</div>
+      </div>
+      <div class="oi-sub">${(item.preco*item.quantidade).toLocaleString()} Kz</div>
+    </div>`;
+  });
+  if(nota){html+=`<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:.85rem;color:var(--muted)">📝 <em>${nota}</em></div>`;}
+  html+=`</div>`;
+
+  el.innerHTML=html;
+
+  // Total
+  document.getElementById('conteudo').insertAdjacentHTML('beforeend',
+    `<div class="total-block"><div><div class="lbl">Total do Pedido</div><div style="font-size:.78rem;color:var(--muted2);margin-top:2px">Entrega a combinar</div></div><div class="val">${total.toLocaleString()} Kz</div></div>`
+  );
+}
+
+function enviar(){
+  const total=carrinho.reduce((s,i)=>s+i.preco*i.quantidade,0);
+  const btn=document.getElementById('btn-wa');
+  btn.textContent='A abrir WhatsApp...';
+  btn.disabled=true;
+
+  let msg=`✅ *NOVO PEDIDO*\n\n`;
+  msg+=`👤 *Cliente:* ${cliente.nome}\n`;
+  msg+=`📍 *Local:* ${cliente.provincia} / ${cliente.municipio}\n`;
+  msg+=`🏠 *Bairro:* ${cliente.bairro}\n\n`;
+  msg+=`🛍️ *ITENS:*\n`;
+  carrinho.forEach(i=>{
+    msg+=`• ${i.quantidade}x ${i.nome} — ${(i.preco*i.quantidade).toLocaleString()} Kz\n`;
+  });
+  if(nota) msg+=`\n📝 *Nota:* ${nota}\n`;
+  msg+=`\n💰 *TOTAL: ${total.toLocaleString()} Kz*\n`;
+  msg+=`\nObrigado pela preferência! 🙏`;
+
+  window.open('https://wa.me/244954288128?text='+encodeURIComponent(msg),'_blank');
+
+  setTimeout(()=>{
+    document.getElementById('success').classList.add('show');
+  },800);
+}
+
+function novoP(){
+  localStorage.removeItem('carrinhoCatalogo');
+  localStorage.removeItem('clienteCatalogo');
+  localStorage.removeItem('notaPedido');
+  window.location.href='index.html';
+}
+
+render();
+</script>
+</body>
+</html>
